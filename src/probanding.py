@@ -37,22 +37,17 @@ def main():
         for retiro_node in retiro_nodes:
             for tigre_node in tigre_nodes:
                 if retiro_node[0] < tigre_node[0]:  # Solo conectar si el nodo de Retiro es anterior al de Tigre
-                    # Añadir arista solo si el nodo de Retiro es de tipo 'D' y el nodo de Tigre es nuevo
                     if retiro_node[1].split('_')[1] == 'D' and not G.has_node(tigre_node[1]):
-                        G.add_edge(retiro_node[1], tigre_node[1], weight=0)
-
-    # Conectar Retiro a Tigre
-    create_edges_between_subregions(retiro_nodes["D"], tigre_nodes["A"])
-
-
-    # Conectar Retiro a Tigre
-    create_edges_between_subregions(retiro_nodes["D"], tigre_nodes["A"])
-    create_edges_between_subregions(retiro_nodes["A"], tigre_nodes["D"])
+                        # Agregar un nuevo nodo de tipo 'A' en la subregión de Tigre
+                        new_node = tigre_node[1].replace('_D_', '_A_')
+                        G.add_node(new_node, station="Tigre", type="A", time=tigre_node[0])
+                        # Conectar el nodo de Retiro tipo 'D' al nuevo nodo de Tigre tipo 'A'
+                        G.add_edge(retiro_node[1], new_node, weight=0)
 
     # Mostrar los nodos y aristas del grafo
     print("Nodos del grafo:")
     print(G.nodes(data=True))
-    print("\nAristas del grafo:")
+    #print("\nAristas del grafo:")
     print(G.edges(data=True))
 
     # Visualizar el grafo
@@ -62,7 +57,7 @@ def main():
     
     edge_labels = nx.get_edge_attributes(G, 'weight')
 
-    nx.draw(G, pos, with_labels=True, node_size=3000, node_color="skyblue", font_size=10, font_weight="bold", arrowsize=20)
+    nx.draw(G, pos, with_labels=True, node_size=1000, node_color="skyblue", font_size=6, font_weight="bold", arrowsize=15)
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 
     plt.title("Grafo con Aristas Dentro de la Misma Subregión (Ordenado por Tiempo)")
