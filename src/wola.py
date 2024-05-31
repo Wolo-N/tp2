@@ -10,10 +10,13 @@ def main():
     data = json.loads(data_json)
 
     # Ordenar los servicios según su tiempo de forma ascendente
-    sorted_services = sorted(data["services"].items(), key=lambda x: max(stop["time"] for stop in x[1]["stops"]))
+    sorted_services = sorted(data["services"].items(), key=lambda x: min(stop["time"] for stop in x[1]["stops"]))
 
     # Crear el grafo dirigido
     G = nx.DiGraph()
+
+    # Conjunto para mantener un registro de los nodos ya agregados
+    added_nodes = set()
 
     # Add nodes and edges based on services
     for service_id, service_data in sorted_services:
@@ -22,20 +25,19 @@ def main():
         capacity = data["rs_info"]["capacity"]
         units_needed = demand // capacity
         
-        # Add nodes and edges for each service
+        # Agregar nodos según el orden de tiempo
+        for stop in sorted(stops, key=lambda x: x["time"]):
+            node = (service_id, stop["time"], stop["station"], stop["type"])
+            if node not in added_nodes:
+                G.add_node(node)
+                added_nodes.add(node)
+
+        # Add edges
         for i in range(len(stops) - 1):
-            departure_event = stops[i]
-            arrival_event = stops[i + 1]
-            
-            dep_node = (service_id, departure_event["time"], departure_event["station"], departure_event["type"])
-            arr_node = (service_id, arrival_event["time"], arrival_event["station"], arrival_event["type"])
-            
-            G.add_node(dep_node)
-            G.add_node(arr_node)
-            
-            # Edge representing the service trip
+            dep_node = (service_id, stops[i]["time"], stops[i]["station"], stops[i]["type"])
+            arr_node = (service_id, stops[i+1]["time"], stops[i+1]["station"], stops[i+1]["type"])
             G.add_edge(dep_node, arr_node, lower_bound=units_needed, upper_bound=data["rs_info"]["max_rs"], cost=0)
-            
+
     # Add transfer edges within stations
     for station in data["stations"]:
         station_nodes = sorted([n for n in G.nodes if n[2] == station], key=lambda x: x[1])
@@ -64,7 +66,7 @@ def main():
             pos[node] = (5, node[1])  # Colocar en el lado derecho
 
     # Dibujar los nodos y aristas
-    nx.draw(G, pos, with_labels=True, node_size=2000, node_color="skyblue", font_size=10, font_weight="bold", arrowsize=20)
+    nx.draw(G, pos, with_labels=True, node_size=1000, node_color="skyblue", font_size=10, font_weight="bold", arrowsize=20)
 
     # Etiquetas de las aristas
     edge_labels = {(u, v): f"lb={d['lower_bound']}, ub={d['upper_bound']}, cost={d['cost']}" for u, v, d in G.edges(data=True)}

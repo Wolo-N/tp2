@@ -4,7 +4,7 @@ print("Libreria networkx importada correctamente")
 
 G = nx.Graph()
 DiG = nx.DiGraph()
-
+'''
 def grafo_a_mano():
     G.add_node(1)
     G.add_nodes_from([2,3,4])
@@ -23,7 +23,7 @@ def grafo_a_mano():
 
 nx.draw(G, with_labels=True, node_color= 'lightblue', node_size= 500, edge_color='#909090')
 #plt.show()
-
+'''
 def grafo_completo(n):
     G = nx.complete_graph(n)
     nx.draw(G, with_labels=True, node_color='lightblue', node_size=500, edge_color='#909090')
@@ -32,7 +32,7 @@ def grafo_completo(n):
 # Solicitar el valor de n al usuario
 #n = int(input("Introduce el número de nodos para el grafo completo: "))
 #grafo_completo(n)
-
+'''
 def grafo_bipartito(n1, n2):
     B = nx.complete_bipartite_graph(n1, n2)
     pos = {node: (1, i) for i, node in enumerate(range(n1))}
@@ -107,9 +107,10 @@ def visualizar_grafo(DiG, s, t):
     plt.show()
 
 visualizar_grafo(DiG, s, t)
-
+'''
 # Ejercicio 2: ahora queremos la máxima cantidad de caminos que no pasen dos veces por el mismo nodo.
 # Debería agregar una arista entre cada nodo:
+'''
 def max_caminos(DiG, s, t):
     # Creo la red residual
     residual = nx.DiGraph(DiG)
@@ -122,3 +123,37 @@ def max_caminos(DiG, s, t):
     flujo_maximo = nx.maximum_flow_value(residual, s, t, capacity='capacity')
     
     return flujo_maximo
+'''
+
+# Ejercicio extra: flujo de costo mínimo: 
+def min_cost_flow(DiG, s, t):
+    # Crear la red residual
+    residual = nx.DiGraph(DiG)
+    
+    # Calcular el flujo de costo mínimo
+    flow_cost = nx.algorithms.flow.min_cost_flow_cost(residual, s, t, weight='weight')
+    
+    return flow_cost
+
+
+# Crear el grafo dirigido
+G = nx.DiGraph()
+G.add_edge('s', 'a', capacity=1, weight=3)  # Arista de s a a con capacidad 1 y costo 3
+G.add_edge('s', 'b', capacity=1, weight=2)  # Arista de s a b con capacidad 1 y costo 2
+G.add_edge('a', 't', capacity=1, weight=1)  # Arista de a a t con capacidad 1 y costo 1
+G.add_edge('b', 't', capacity=1, weight=2)  # Arista de b a t con capacidad 1 y costo 2
+
+# Resolver el flujo de costo mínimo
+min_cost = min_cost_flow(G, 's', 't')
+print("Flujo de costo mínimo:", min_cost)
+
+# Dibujar el grafo
+pos = nx.spring_layout(G)
+nx.draw(G, pos, with_labels=True, node_size=700, node_color='lightblue', font_size=12, font_weight='bold', arrowsize=20)
+
+# Agregar etiquetas de peso a las aristas
+labels = nx.get_edge_attributes(G, 'weight')
+nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+
+plt.title("Grafo de Flujo de Costo Mínimo")
+plt.show()
