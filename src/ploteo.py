@@ -55,7 +55,7 @@ def plotear(G: nx.Graph, flowDict: dict):
     edge_labels = {}
     for u, v, d in G.edges(data=True):
         flujo = flowDict[u][v] if u in flowDict and v in flowDict[u] else 0
-        edge_labels[(u, v)] = f"flow={flujo}"
+        edge_labels[(u, v)] = f"Flow={flujo}"
     
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
 
