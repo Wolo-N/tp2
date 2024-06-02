@@ -2,7 +2,6 @@ import json
 import networkx as nx
 import matplotlib.pyplot as plt
 import math
-from ploteo import plotear
 
 def plotear(G: nx.Graph, flowDict: dict):
     colores_estaciones = {
@@ -54,7 +53,20 @@ def plotear(G: nx.Graph, flowDict: dict):
                 else:
                     pos[nodo] = (5, i * -separacion_vertical)
 
-    nx.draw(G, pos, node_color=nodos_colores, edge_color=aristas_colores, with_labels=True, node_size=500)
+    # Ajustar la posición del nodo "GarajeTrasnoche"
+    max_x = max(pos[node][0] for node in pos)
+    min_x = min(pos[node][0] for node in pos)
+    garaje_trasnoche_x = max_x + 3  # Ajustar la posición a la derecha del grafo
+    pos["GarajeTrasnoche"] = (garaje_trasnoche_x, 0)
+
+    # Ajustar las aristas de trasnoche del último nodo de Retiro y Tigre hacia GarajeTrasnoche
+    for estacion, nodos in estaciones_nodos.items():
+        ultimo_nodo = nodos[-1]
+        for vecino in G.neighbors(ultimo_nodo):
+            if vecino == "GarajeTrasnoche":
+                G.edges[ultimo_nodo, vecino]["tipo"] = "trasnoche"
+    
+    nx.draw(G, pos, node_color=nodos_colores, edge_color=aristas_colores, with_labels=True, node_size=500, font_size=8)
 
     for tipo, color in colores_aristas.items():
         plt.scatter([], [], c=color, label=tipo)
@@ -68,6 +80,9 @@ def plotear(G: nx.Graph, flowDict: dict):
         edge_labels[(u, v)] = f"Flow={flujo}"
 
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
+
+    # Disminuir el tamaño de la letra del nodo "GarajeTrasnoche"
+    nx.draw_networkx_labels(G, {node: (x, y) if node != "GarajeTrasnoche" else (x, y - 0.5) for node, (x, y) in pos.items()}, labels={node: node if node != "GarajeTrasnoche" else "GarajeTrasnoche" for node in G.nodes}, font_size=8)
 
     plt.show()
 
