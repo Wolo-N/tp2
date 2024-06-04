@@ -13,7 +13,6 @@ def plotear(G, flowDict):
         "trasnoche": "red",
         "traspaso": "blue",
         "tren": "green",
-        "garaje_trasnoche": "purple"
     }
 
     aristas_colores = [colores_aristas[G.edges[arista]["tipo"]] for arista in G.edges]
@@ -69,13 +68,14 @@ def plotear(G, flowDict):
 
 def main():
     filename = "instances/toy_instance.json"
-    #filename = "instances/retiro-tigre-semana.json"
+    # filename = "instances/retiro-tigre-semana.json"
 
     with open(filename) as json_file:
         data = json.load(json_file)
 
     G = nx.DiGraph()
 
+    # Process each service in the data
     for viaje_id, viaje_data in data["services"].items():
         nodo1_time = viaje_data["stops"][0]["time"]
         nodo1_station = viaje_data["stops"][0]["station"]
@@ -83,64 +83,56 @@ def main():
         nodo2_station = viaje_data["stops"][1]["station"]
         nodo1_type = viaje_data["stops"][0]["type"]
         nodo2_type = viaje_data["stops"][1]["type"]
+
+        demand = math.ceil(viaje_data["demand"][0] / 100)
         
-        demanda = math.ceil(viaje_data["demand"][0] / 100)
-
+        # Add train edges with appropriate demand
         if nodo1_type == "D" and nodo2_type == "A":
-            G.add_edge(nodo1_time, nodo2_time, tipo="tren", capacidad=demanda, costo=0, demanda=demanda)
+            G.add_edge((nodo1_station, nodo1_time), (nodo2_station, nodo2_time), tipo="tren", capacidad=float("inf"), costo=0, demanda=demand)
         elif nodo1_type == "A" and nodo2_type == "D":
-            G.add_edge(nodo2_time, nodo1_time, tipo="tren", capacidad=demanda, costo=0, demanda=demanda)
-        if nodo1_type == "A":
-            G.add_node(nodo1_time, station=nodo1_station, type=nodo1_type, demanda=demanda)
-            G.add_node(nodo2_time, station=nodo2_station, type=nodo2_type, demanda=-demanda)
-        else:
-            G.add_node(nodo1_time, station=nodo1_station, type=nodo1_type, demanda=-demanda)
-            G.add_node(nodo2_time, station=nodo2_station, type=nodo2_type, demanda=demanda)
+            G.add_edge((nodo2_station, nodo2_time), (nodo1_station, nodo1_time), tipo="tren", capacidad=float("inf"), costo=0, demanda=demand)
 
+        # Add nodes with demand attribute
+        if nodo1_type == "A":
+            G.add_node((nodo1_station, nodo1_time), station=nodo1_station, demanda=demand)
+            G.add_node((nodo2_station, nodo2_time), station=nodo2_station, demanda=-demand)
+        else:
+            G.add_node((nodo1_station, nodo1_time), station=nodo1_station, demanda=-demand)
+            G.add_node((nodo2_station, nodo2_time), station=nodo2_station, demanda=demand)
+
+    # Group nodes by station and sort by time
     estaciones_nodos = {}
     for nodo in G.nodes:
-        estacion = G.nodes[nodo]["station"]
+        estacion = nodo[0]
         if estacion not in estaciones_nodos:
             estaciones_nodos[estacion] = []
         estaciones_nodos[estacion].append(nodo)
 
+    # Add transfer and overnight edges
     for estacion, nodos in estaciones_nodos.items():
-        nodos_ordenados = sorted(nodos)
-        flujo_entrante = sum(G[nodo_prev][nodo]["demanda"] for nodo_prev, nodo in G.in_edges(nodos))
-        flujo_saliente = sum(G[nodo][nodo_next]["demanda"] for nodo, nodo_next in G.out_edges(nodos))
-        flujo_net = flujo_entrante - flujo_saliente
+        nodos_ordenados = sorted(nodos, key=lambda x: x[1])
 
-        for i in range(len(nodos_ordenados)):
-            if i < len(nodos_ordenados) - 1:
-                nodo_actual = nodos_ordenados[i]
-                nodo_siguiente = nodos_ordenados[i+1]
-                if G.nodes[nodo_actual]["type"] == "A" and G.nodes[nodo_siguiente]["type"] == "D":
-                    if not G.has_edge(nodo_actual, nodo_siguiente):
-                        flujo_transferir = min(flujo_net, demanda)
-                        G.add_edge(nodo_actual, nodo_siguiente, tipo="traspaso", capacidad=float("inf"), costo=1, demanda=flujo_transferir)
-                        flujo_net -= flujo_transferir
-                elif G.nodes[nodo_actual]["type"] == "D" and G.nodes[nodo_siguiente]["type"] == "A":
-                    if not G.has_edge(nodo_siguiente, nodo_actual):
-                        flujo_transferir = min(flujo_net, demanda)
-                        G.add_edge(nodo_siguiente, nodo_actual, tipo="traspaso", capacidad=float("inf"), costo=1, demanda=flujo_transferir)
-                        flujo_net -= flujo_transferir
-
+        for i in range(len(nodos_ordenados) - 1):
+            G.add_edge(nodos_ordenados[i], nodos_ordenados[i + 1], tipo="traspaso", capacidad=float("inf"), costo=0)
+        
+        # Add overnight edge
         if len(nodos_ordenados) > 1:
-            nodo_final = nodos_ordenados[-1]
-            nodo_inicial = nodos_ordenados[0]
-            if not G.has_edge(nodo_final, nodo_inicial):
-                flujo_transferir = min(flujo_net, demanda)
-                G.add_edge(nodo_final, nodo_inicial, tipo="trasnoche", capacidad=float("inf"), costo=2, demanda=flujo_transferir)
-                flujo_net -= flujo_transferir
+            G.add_edge(nodos_ordenados[-1], nodos_ordenados[0], tipo="trasnoche", capacidad=float("inf"), costo=1)
 
-    flowDict = nx.min_cost_flow(G, "demanda", "capacidad", "costo")
-    plotear(G, flowDict)
+    # Convert demand node attributes to imbalance for min_cost_flow
+    demand_dict = {nodo: G.nodes[nodo].get("demanda", 0) for nodo in G.nodes}
 
+    # Ensure the demand attribute is correctly referenced in the nodes
+    nx.set_node_attributes(G, demand_dict, 'demand')
+
+    # Compute minimum cost flow
+    flowDict = nx.min_cost_flow(G, demand='demand', capacity='capacidad', weight='costo')
+    
+    # Plot the graph with flows
+    plotear(G, flowDict)  # Ensure plotear is defined or imported if used
+
+    # Print the result
     print(flowDict)
-
-    for arista in G.edges:
-        if G.edges[arista]["tipo"] == "tren":
-            print(arista)
 
 if __name__ == "__main__":
     main()

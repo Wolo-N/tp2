@@ -26,7 +26,7 @@ def main():
 		
 		if nodo1_type == "D" and nodo2_type == "A":
 			# Crea la arista de tipo "tren" desde nodo1 a nodo2
-			G.add_edge(nodo1_time, nodo2_time, tipo="tren",  capacidad= float("inf"),costo=0, demanda=math.ceil(viaje_data["demand"][0]/100))
+			G.add_edge(nodo1_time, nodo2_time, tipo="tren",  capacidad= 25,costo=1, demanda=math.ceil(viaje_data["demand"][0]/100))
 		elif nodo1_type == "A" and nodo2_type == "D":
 			# Crea la arista de tipo "tren" desde nodo2 a nodo1
 			G.add_edge(nodo2_time, nodo1_time, tipo="tren", capacidad= float("inf"),costo=0, demanda=math.ceil(viaje_data["demand"][0]/100))
