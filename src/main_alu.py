@@ -31,18 +31,18 @@ def main():
 		
 		if nodo1_type == "A":
 			
-			G.add_node(f"{nodo1_time}_{i}" , time = nodo1_time, station=nodo1_station, type=nodo1_type, demanda= -demanda)
-			G.add_node(f"{nodo2_time}_{i+1}" , time = nodo2_time, station=nodo2_station, type=nodo2_type, demanda= demanda)
+			G.add_node(f"{nodo1_time}_{nodo1_station}_{nodo1_type}" , time = nodo1_time, station=nodo1_station, type=nodo1_type, demanda= -demanda)
+			G.add_node(f"{nodo2_time}_{nodo2_station}_{nodo2_type}" , time = nodo2_time, station=nodo2_station, type=nodo2_type, demanda= demanda)
 		else:
 			
-			G.add_node(f"{nodo1_time}_{i}", time = nodo1_time, station=nodo1_station, type=nodo1_type, demanda= demanda)
-			G.add_node(f"{nodo2_time}_{i+1}", time = nodo2_time, station=nodo2_station, type=nodo2_type, demanda= -demanda)
+			G.add_node(f"{nodo1_time}_{nodo1_station}_{nodo1_type}", time = nodo1_time, station=nodo1_station, type=nodo1_type, demanda= demanda)
+			G.add_node(f"{nodo2_time}_{nodo2_station}_{nodo2_type}", time = nodo2_time, station=nodo2_station, type=nodo2_type, demanda= -demanda)
 		if nodo1_type == "D" and nodo2_type == "A":
 			# Crea la arista de tipo "tren" desde nodo1 a nodo2
-			G.add_edge(f"{nodo1_time}_{i}", f"{nodo2_time}_{i+1}", tipo="tren",  capacidad = max_capacidad - demanda, costo=0)
+			G.add_edge(f"{nodo1_time}_{nodo1_station}_{nodo1_type}",f"{nodo2_time}_{nodo2_station}_{nodo2_type}", tipo="tren",  capacidad = max_capacidad - demanda, costo=0)
 		elif nodo1_type == "A" and nodo2_type == "D":
 			# Crea la arista de tipo "tren" desde nodo2 a nodo1
-			G.add_edge(f"{nodo2_time}_{i+1}", f"{nodo1_time}_{i}", tipo="tren", capacidad = max_capacidad - demanda, costo = 0)
+			G.add_edge(f"{nodo2_time}_{nodo2_station}_{nodo2_type}", f"{nodo1_time}_{nodo1_station}_{nodo1_type}", tipo="tren", capacidad = max_capacidad - demanda, costo = 0)
 		i = i + 2
 	
 	#for nodo in G.nodes():
