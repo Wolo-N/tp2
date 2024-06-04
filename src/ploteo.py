@@ -29,7 +29,7 @@ def plotear(G: nx.Graph, flowDict: dict):
         estaciones_nodos[estacion].append(nodo)
 
     for estacion, nodos in estaciones_nodos.items():
-        nodos_ordenados = sorted(nodos)
+        nodos_ordenados = sorted(nodos, key=lambda nodo: G.nodes[nodo]["time"])        
         separacion_vertical = 0.5
 
         for i, nodo in enumerate(nodos_ordenados):

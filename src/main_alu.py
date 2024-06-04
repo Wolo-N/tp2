@@ -13,7 +13,7 @@ def main():
 	#print(data)
 	# test file reading
 	G = nx.DiGraph()
-
+	
 	for viaje_id, viaje_data in data["services"].items():
 		# Accede a los datos de cada viaje
 		nodo1_time = viaje_data["stops"][0]["time"]
@@ -25,26 +25,37 @@ def main():
 		max_capacidad = data["rs_info"]["max_rs"]
 		# Agrega los nodos al grafo con sus atributos
 		demanda = math.ceil(viaje_data["demand"][0]/100)
-		print(demanda)
-
+		#print(demanda)
+	
 		
+		
+		if nodo1_type == "A":
+			
+			G.add_node(f"{nodo1_time}_{nodo1_station}_{nodo1_type}" , time = nodo1_time, station=nodo1_station, type=nodo1_type, demanda= -demanda)
+			G.add_node(f"{nodo2_time}_{nodo2_station}_{nodo2_type}" , time = nodo2_time, station=nodo2_station, type=nodo2_type, demanda= demanda)
+		else:
+			
+			G.add_node(f"{nodo1_time}_{nodo1_station}_{nodo1_type}", time = nodo1_time, station=nodo1_station, type=nodo1_type, demanda= demanda)
+			G.add_node(f"{nodo2_time}_{nodo2_station}_{nodo2_type}", time = nodo2_time, station=nodo2_station, type=nodo2_type, demanda= -demanda)
 		if nodo1_type == "D" and nodo2_type == "A":
 			# Crea la arista de tipo "tren" desde nodo1 a nodo2
-			G.add_edge(nodo1_time, nodo2_time, tipo="tren",  capacidad = max_capacidad - demanda)
+			G.add_edge(f"{nodo1_time}_{nodo1_station}_{nodo1_type}", f"{nodo2_time}_{nodo2_station}_{nodo2_type}", tipo="tren",  capacidad = max_capacidad - demanda, costo=0)
 		elif nodo1_type == "A" and nodo2_type == "D":
 			# Crea la arista de tipo "tren" desde nodo2 a nodo1
-			G.add_edge(nodo2_time, nodo1_time, tipo="tren", capacidad = max_capacidad, costo = 0, demanda=demanda)
-		if nodo1_type == "A":
-			G.add_node(nodo1_time , station=nodo1_station, type=nodo1_type, demanda= -demanda)
-			G.add_node(nodo2_time , station=nodo2_station, type=nodo2_type, demanda= demanda)
-		else:
-			G.add_node(nodo1_time, station=nodo1_station, type=nodo1_type, demanda= demanda)
-			G.add_node(nodo2_time, station=nodo2_station, type=nodo2_type, demanda= -demanda)
+			G.add_edge(f"{nodo2_time}_{nodo2_station}_{nodo2_type}", f"{nodo1_time}_{nodo1_station}_{nodo1_type}", tipo="tren", capacidad = max_capacidad - demanda, costo = 0)
+		
 	
 	#for nodo in G.nodes():
 	#	if "705" in nodo:	
 	#		print(nodo)
 	# Crear un diccionario para agrupar nodos por estación
+
+	i = 0
+	for x in G.nodes():
+		i = i + 1
+		print(x)
+	print("la cantidad de nodos es: " ,i)
+
 	estaciones_nodos = {}
 	for nodo in G.nodes:
 		estacion = G.nodes[nodo]["station"]
@@ -54,7 +65,7 @@ def main():
 
 	# Ordenar nodos dentro de cada estación por tiempo
 	for estacion, nodos in estaciones_nodos.items():
-		nodos_ordenados = sorted(nodos)
+		nodos_ordenados = sorted(nodos, key=lambda nodo: G.nodes[nodo]["time"])
 
 		# Agregar aristas dirigidas entre nodos adyacentes
 		for i in range(len(nodos_ordenados) - 1):
