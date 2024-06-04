@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-def plotear(G: nx.Graph, flowDict: dict):
+def plotear(G: nx.Graph, flowDict: dict, a):
     colores_estaciones = {
         "Retiro": "blue",
         "Tigre": "red",
@@ -62,5 +62,8 @@ def plotear(G: nx.Graph, flowDict: dict):
     nx.draw_networkx_labels(G, pos, labels=node_labels, font_size=8)
     
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
-
+    if a == 0:
+        plt.title("Lo que devuelve min_cost_flow")
+    else:
+        plt.title("Interpretación de los vagones")
     plt.show()
