@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-def plotear(G: nx.Graph, flowDict: dict):
+def plotear(G: nx.Graph, flowDict: dict, a):
     colores_estaciones = {
         "Retiro": "blue",
         "Tigre": "red",
@@ -29,7 +29,7 @@ def plotear(G: nx.Graph, flowDict: dict):
         estaciones_nodos[estacion].append(nodo)
 
     for estacion, nodos in estaciones_nodos.items():
-        nodos_ordenados = sorted(nodos)
+        nodos_ordenados = sorted(nodos, key=lambda nodo: G.nodes[nodo]["time"])        
         separacion_vertical = 0.5
 
         for i, nodo in enumerate(nodos_ordenados):
@@ -44,19 +44,26 @@ def plotear(G: nx.Graph, flowDict: dict):
                 else:
                     pos[nodo] = (5, i * -separacion_vertical)
 
-    nx.draw(G, pos, node_color=nodos_colores, edge_color=aristas_colores, with_labels=True, node_size=500)
+    nx.draw(G, pos, node_color=nodos_colores, edge_color=aristas_colores, with_labels=False, node_size=500)
 
     for tipo, color in colores_aristas.items():
         plt.scatter([], [], c=color, label=tipo)
 
-    plt.legend()
+    plt.legend(loc="upper center")
 
     # Etiquetas de las aristas
     edge_labels = {}
     for u, v, d in G.edges(data=True):
         flujo = flowDict[u][v] if u in flowDict and v in flowDict[u] else 0
-        edge_labels[(u, v)] = f"Flow={flujo}"
+        capacidad = G.edges[(u,v)]["capacidad"]
+        edge_labels[(u, v)] = f"{flujo}/{capacidad}"
+    
+    node_labels = {nodo: f"{nodo} ({G.nodes[nodo]['demanda']})" for nodo in G.nodes}
+    nx.draw_networkx_labels(G, pos, labels=node_labels, font_size=8)
     
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
-
+    if a == 0:
+        plt.title("Lo que devuelve min_cost_flow")
+    else:
+        plt.title("Interpretación de los vagones")
     plt.show()
