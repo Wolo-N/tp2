@@ -49,7 +49,7 @@ def plotear(G: nx.Graph, flowDict: dict, a):
     for tipo, color in colores_aristas.items():
         plt.scatter([], [], c=color, label=tipo)
 
-    plt.legend(loc="upper center")
+    plt.legend(loc="lower center")
 
     # Etiquetas de las aristas
     edge_labels = {}
@@ -63,7 +63,9 @@ def plotear(G: nx.Graph, flowDict: dict, a):
     
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
     if a == 0:
-        plt.title("Lo que devuelve min_cost_flow")
+        plt.title("Devolución del algoritmo min_cost_flow")
+        # Con adaptación y reducción de las cotas inferiores a 0 para que el algoritmo funcione.
+    
     else:
         plt.title("Interpretación de los vagones")
     plt.show()

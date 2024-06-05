@@ -1,0 +1,77 @@
+{
+  "services": {
+    "1": {
+      "stops": [
+        { "time": 206, "station": "Retiro", "type": "D" },
+        { "time": 287, "station": "Tigre", "type": "A" }
+      ],
+      "demand": [435]
+    },
+    "2": {
+      "stops": [
+        { "time": 250, "station": "Tigre", "type": "D" },
+        { "time": 293, "station": "Retiro", "type": "A" }
+      ],
+      "demand": [666]
+    },
+    "3": {
+      "stops": [
+        { "time": 271, "station": "Tigre", "type": "D" },
+        { "time": 314, "station": "Retiro", "type": "A" }
+      ],
+      "demand": [166]
+    },
+    "4": {
+      "stops": [
+        { "time": 219, "station": "Retiro", "type": "D" },
+        { "time": 303, "station": "Tigre", "type": "A" }
+      ],
+      "demand": [727]
+    },
+    "5": {
+      "stops": [
+        { "time": 219, "station": "Tigre", "type": "D" },
+        { "time": 297, "station": "Retiro", "type": "A" }
+      ],
+      "demand": [167]
+    },
+    "6": {
+      "stops": [
+        { "time": 207, "station": "Tigre", "type": "D" },
+        { "time": 285, "station": "Retiro", "type": "A" }
+      ],
+      "demand": [270]
+    },
+    "7": {
+      "stops": [
+        { "time": 221, "station": "Retiro", "type": "D" },
+        { "time": 264, "station": "Tigre", "type": "A" }
+      ],
+      "demand": [189]
+    },
+    "8": {
+      "stops": [
+        { "time": 288, "station": "Retiro", "type": "D" },
+        { "time": 365, "station": "Tigre", "type": "A" }
+      ],
+      "demand": [323]
+    },
+    "9": {
+      "stops": [
+        { "time": 270, "station": "Tigre", "type": "D" },
+        { "time": 363, "station": "Retiro", "type": "A" }
+      ],
+      "demand": [488]
+    },
+    "10": {
+      "stops": [
+        { "time": 262, "station": "Tigre", "type": "D" },
+        { "time": 324, "station": "Retiro", "type": "A" }
+      ],
+      "demand": [160]
+    }
+  },
+  "stations": ["Tigre", "Retiro"],
+  "cost_per_unit": { "Tigre": 1.0, "Retiro": 1.0 },
+  "rs_info": { "capacity": 100, "max_rs": 25 }
+}
