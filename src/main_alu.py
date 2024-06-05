@@ -59,11 +59,19 @@ def flujo_maximo_corte_minimo(G):
 
 
 def plotear(G: nx.Graph, flowDict: dict, a, filename):
-    colores_estaciones = {
-        "Retiro": "blue",
-        "Tigre": "red",
-    }
+    estaciones = set(nx.get_node_attributes(G, 'station').values())
 
+    if estaciones == {"Retiro", "Tigre"}:
+        colores_estaciones = {
+            "Retiro": "blue",
+            "Tigre": "red",
+        }
+    else: 
+        colores_estaciones = {
+            "La Plata": "blue", 
+            "Hospital San Juan de Dios": "red",
+        }
+    
     colores_aristas = {
         "trasnoche": "red",
         "traspaso": "blue",
@@ -130,7 +138,7 @@ def plotear(G: nx.Graph, flowDict: dict, a, filename):
 
 # Función principal
 def main():
-    archivos = ["instances/toy_instance.json", "instances/retiro-tigre-semana.json", "instances/test_instance_ward.json"]
+    archivos = ["instances/new_instance.json", "instances/toy_instance.json", "instances/retiro-tigre-semana.json", "instances/test_instance_ward.json"]
     for filename in archivos: 
         with open(filename) as json_file:
             data = json.load(json_file)
