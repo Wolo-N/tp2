@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-def plotear(G: nx.Graph, flowDict: dict, a):
+def plotear(G: nx.Graph, flowDict: dict, a, filename):
     colores_estaciones = {
         "Retiro": "blue",
         "Tigre": "red",
@@ -64,8 +64,9 @@ def plotear(G: nx.Graph, flowDict: dict, a):
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
     if a == 0:
         plt.title("Devolución del algoritmo min_cost_flow")
-        # Con adaptación y reducción de las cotas inferiores a 0 para que el algoritmo funcione.
-    
+        plt.text(0.5, -0.1, f'Archivo: {filename}\nCon adaptación y reducción de las cotas inferiores a 0 para que el algoritmo funcione.', fontsize=10, color='gray', style='italic', ha='center', transform=plt.gca().transAxes)
     else:
         plt.title("Interpretación de los vagones")
+        plt.text(0.5, -0.1, f'Archivo: {filename}', fontsize=10, color='gray', style='italic', ha='center', transform=plt.gca().transAxes)
+    
     plt.show()

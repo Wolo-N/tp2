@@ -73,7 +73,7 @@ def main():
 
         # Plotteo exacto lo que tira min_cost_flow.
         # El 0 o el 1 pasado como parámetro solamente cambia los títulos.
-        plotear(G, flowDict, 0) 
+        plotear(G, flowDict, 0, filename) 
 
         # Para la interpretacion, cambio los flujos para que representen los vagones.
         for u, v in G.edges:
@@ -81,7 +81,7 @@ def main():
                 # Sumar la demanda del nodo receptor al flujo existente.
                 flowDict[u][v] += G.nodes[u]["demanda"]
         # Plotteo con la representación medida en vagones.
-        plotear(G, flowDict, 1)
+        plotear(G, flowDict, 1, filename)
 
 if __name__ == "__main__":
     main()
