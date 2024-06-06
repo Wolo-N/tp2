@@ -97,7 +97,7 @@ def plotear(G: nx.Graph, flowDict: dict, a, filename):
         separacion_vertical = 0.5
 
         for i, nodo in enumerate(nodos_ordenados):
-            if estacion == "Retiro":
+            if estacion == "Retiro" or estacion == "La Plata":
                 if i == 0 or i == len(nodos_ordenados) - 1:
                     pos[nodo] = (0, i * -separacion_vertical)
                 else:
