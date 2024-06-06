@@ -27,9 +27,9 @@ def construir_grafo(data):
         
         if nodo1_type == "D" and nodo2_type == "A":
             # Agregar aristas con capacidad y costo
-            G.add_edge(f"{nodo1_time}_{nodo1_station}_{nodo1_type}", f"{nodo2_time}_{nodo2_station}_{nodo2_type}", tipo="tren", capacidad=max_capacidad - demanda, costo=0)
+            G.add_edge(f"{nodo1_time}_{nodo1_station}_{nodo1_type}", f"{nodo2_time}_{nodo2_station}_{nodo2_type}", tipo="tren", capacidad=max_capacidad, costo=0)
         elif nodo1_type == "A" and nodo2_type == "D":
-            G.add_edge(f"{nodo2_time}_{nodo2_station}_{nodo2_type}", f"{nodo1_time}_{nodo1_station}_{nodo1_type}", tipo="tren", capacidad=max_capacidad - demanda, costo=0)
+            G.add_edge(f"{nodo2_time}_{nodo2_station}_{nodo2_type}", f"{nodo1_time}_{nodo1_station}_{nodo1_type}", tipo="tren", capacidad=max_capacidad, costo=0)
     
     estaciones_nodos = {}
     for nodo in G.nodes:
