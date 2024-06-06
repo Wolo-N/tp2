@@ -5,126 +5,126 @@
         {"time": 427, "station": "La Plata", "type": "D"},
         {"time": 488, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [500]
     },
     "702": {
       "stops": [
         {"time": 438, "station": "La Plata", "type": "D"},
         {"time": 499, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [500]
     },
     "703": {
       "stops": [
         {"time": 448, "station": "La Plata", "type": "D"},
         {"time": 509, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [550]
     },
     "704": {
       "stops": [
         {"time": 463, "station": "La Plata", "type": "D"},
         {"time": 524, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [600]
     },
     "705": {
       "stops": [
         {"time": 484, "station": "La Plata", "type": "D"},
         {"time": 545, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [600]
     },
     "706": {
       "stops": [
         {"time": 491, "station": "La Plata", "type": "D"},
         {"time": 552, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [650]
     },
     "707": {
       "stops": [
         {"time": 511, "station": "La Plata", "type": "D"},
         {"time": 572, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [700]
     },
     "708": {
       "stops": [
         {"time": 521, "station": "La Plata", "type": "D"},
         {"time": 582, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [700]
     },
     "709": {
       "stops": [
         {"time": 547, "station": "La Plata", "type": "D"},
         {"time": 608, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [750]
     },
     "710": {
       "stops": [
         {"time": 586, "station": "La Plata", "type": "D"},
         {"time": 647, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [750]
     },
     "711": {
       "stops": [
         {"time": 611, "station": "La Plata", "type": "D"},
         {"time": 672, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [800]
     },
     "712": {
       "stops": [
         {"time": 642, "station": "La Plata", "type": "D"},
         {"time": 703, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [800]
     },
     "713": {
       "stops": [
         {"time": 662, "station": "La Plata", "type": "D"},
         {"time": 723, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [850]
     },
     "714": {
       "stops": [
         {"time": 682, "station": "La Plata", "type": "D"},
         {"time": 743, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [850]
     },
     "715": {
       "stops": [
         {"time": 754, "station": "La Plata", "type": "D"},
         {"time": 815, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [900]
     },
     "716": {
       "stops": [
         {"time": 793, "station": "La Plata", "type": "D"},
         {"time": 854, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [900]
     },
     "717": {
       "stops": [
         {"time": 848, "station": "La Plata", "type": "D"},
         {"time": 909, "station": "Hospital San Juan de Dios", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [950]
     },
     "702_": {
       "stops": [
         {"time": 458, "station": "Hospital San Juan de Dios", "type": "D"},
         {"time": 499, "station": "La Plata", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [950]
     },
     "704_": {
       "stops": [
@@ -159,28 +159,28 @@
         {"time": 899, "station": "Hospital San Juan de Dios", "type": "D"},
         {"time": 960, "station": "La Plata", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [950]
     },
     "714_": {
       "stops": [
         {"time": 929, "station": "Hospital San Juan de Dios", "type": "D"},
         {"time": 990, "station": "La Plata", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [600]
     },
     "716_": {
       "stops": [
         {"time": 967, "station": "Hospital San Juan de Dios", "type": "D"},
         {"time": 1028, "station": "La Plata", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [550]
     },
     "718": {
       "stops": [
         {"time": 1006, "station": "Hospital San Juan de Dios", "type": "D"},
         {"time": 1067, "station": "La Plata", "type": "A"}
       ],
-      "demand": [1000]
+      "demand": [500]
     }
   },
   "stations": ["La Plata", "Hospital San Juan de Dios"],
