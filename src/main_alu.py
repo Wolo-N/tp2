@@ -133,7 +133,7 @@ def plotear(G: nx.Graph, flowDict: dict, a, filename):
 
 # Función principal
 def main():
-    archivos = ["instances/new_instance.json", "instances/toy_instance.json", "instances/retiro-tigre-semana.json", "instances/test_instance_ward.json"]
+    archivos = ["instances/retiro-tigre-semana.json"]#, "instances/toy_instance.json", "instances/test_instance_ward.json", "instances/new_instance.json"]
     for filename in archivos:
         with open(filename) as json_file:
             data = json.load(json_file)
@@ -153,6 +153,7 @@ def main():
             if G.edges[u, v]["tipo"] == "tren":
                 # Sumar la demanda del nodo receptor al flujo existente.
                 flowDict[u][v] += G.nodes[u]["demanda"]
+                G.edges[u,v]["capacidad"] = G.edges[u,v]["capacidad"] + G.nodes[u]["demanda"]
         # Plotteo con la representación medida en vagones.
         plotear(G, flowDict, 1, filename)
 
