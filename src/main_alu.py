@@ -50,11 +50,6 @@ def construir_grafo(data):
 # Función para calcular el flujo máximo y el corte mínimo
 def flujo_maximo_corte_minimo(G):
     flowDict = nx.min_cost_flow(G, "demanda", "capacidad", "costo")
-    
-    for u, v in G.edges:
-        if G.edges[u, v]["tipo"] == "tren":
-            flowDict[u][v] += G.nodes[u]["demanda"]
-    
     return flowDict
 
 
