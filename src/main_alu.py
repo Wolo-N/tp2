@@ -139,7 +139,7 @@ def plotear(G: nx.Graph, flowDict: dict, a, filename):
 # Función principal
 def main():
     archivos = ["instances/new_instance.json", "instances/toy_instance.json", "instances/retiro-tigre-semana.json", "instances/test_instance_ward.json"]
-    for filename in archivos: 
+    for filename in archivos:
         with open(filename) as json_file:
             data = json.load(json_file)
         
@@ -151,7 +151,7 @@ def main():
 
         # Plotteo exacto lo que tira min_cost_flow.
         # El 0 o el 1 pasado como parámetro solamente cambia los títulos.
-        plotear(G, flowDict, 0, filename) 
+        plotear(G, flowDict, 0, filename)
 
         # Para la interpretacion, cambio los flujos para que representen los vagones.
         for u, v in G.edges:
