@@ -44,13 +44,7 @@ def construir_grafo(data):
 		for i in range(len(nodos_ordenados) - 1):
 			G.add_edge(nodos_ordenados[i], nodos_ordenados[i + 1], tipo="traspaso", capacidad=float("inf"), costo=0)
 		G.add_edge(nodos_ordenados[-1], nodos_ordenados[0], tipo="trasnoche", capacidad=float("inf"), costo=1)
-	aristas_trasnoche = []
-	for u,v, in G.edges():
-		if G.edges[u,v]["tipo"] == "trasnoche":
-			aristas_trasnoche.append((u,v))
-	G.edges[aristas_trasnoche[1][0],aristas_trasnoche[1][1]]["capacidad"] = 25
-	G.add_edge(aristas_trasnoche[1][0],aristas_trasnoche[0][0], tipo="trasnoche",capacidad=float("inf"),costo=0)
-	G.add_edge(aristas_trasnoche[0][1],aristas_trasnoche[1][1], tipo="trasnoche", capacidad=float("inf"), costo=1)
+	
 	return G
 
 # Función para calcular el flujo máximo y el corte mínimo
@@ -78,6 +72,7 @@ def plotear(G: nx.Graph, flowDict: dict, a, filename):
 		"trasnoche": "red",
 		"traspaso": "blue",
 		"tren": "green",
+		"trenR": "orange",
 	}
 
 	aristas_colores = [colores_aristas[G.edges[arista]["tipo"]] for arista in G.edges]
