@@ -8,7 +8,7 @@ from main_alu import construir_grafo, plotear, flujo_maximo_corte_minimo
 def main():
     archivos = ["instances/new_instance.json", "instances/toy_instance.json", "instances/retiro-tigre-semana.json"]
     archivos = ["instances/toy_instance.json"]
-    for filename in archivos: 
+    for filename in archivos:
         with open(filename) as json_file:
             data = json.load(json_file)
         
