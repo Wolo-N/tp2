@@ -1,7 +1,7 @@
 import json
 import networkx as nx
 import matplotlib.pyplot as plt
-from main_alu import construir_grafo, plotear, flujo_maximo_corte_minimo
+from core_functions import *
 # Función para construir el grafo a partir de los datos proporcionados
 
 # Función principal
