@@ -2,9 +2,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import math
 
-
-
-
 def construir_grafo(data):
 	"""
 	Función para construir el grafo a partir de los datos proporcionados.
@@ -85,9 +82,50 @@ def flujo_maximo_corte_minimo(G):
 	return flowDict
 
 
+def cambios_por_reparaciones (estacion_reparacion, capacidad_limitada, G):
+	"""
+	Modifica el grafo G  y su flujo para corregir por reparaciones en una estación específica,
+	limitando la capacidad de traspaso nocturno y añadiendo aristas de trenR para redirigir el flujo de trenes.
+
+	Parámetros:
+	- estacion_en_reparacion (str): Nombre de la estación donde se están realizando reparaciones.
+	- capacidad_limitada (int): Capacidad máxima permitida para las aristas de traspaso nocturno en la estación en reparación.
+	- G (networkx.DiGraph): Grafo dirigido que representa la red de transporte.
+
+	Retorna:
+	- G (networkx.DiGraph): El grafo adaptado a las nuevas restricciones.
+	"""
+
+	aristas_trasnoche = []
+	for u,v, in G.edges():
+		if G.edges[u,v]["tipo"] == "trasnoche":
+			aristas_trasnoche.append(((u,v), G.nodes[u]["station"])) #agrego la arista y de donde sale 
+
+	# Verifica si la estación en reparación es la segunda estación de traspaso nocturno
+	if estacion_reparacion == G.nodes[aristas_trasnoche[1][0][0]]["station"]:
+		# Limitamos la capacidad de la arista de traspaso nocturno
+		G.edges[aristas_trasnoche[1][0][0],aristas_trasnoche[1][0][1]]["capacidad"] = capacidad_limitada
+		# Aliviamos el flujo redirigiendolo con TrenesR
+		G.add_edge(aristas_trasnoche[1][0][0],aristas_trasnoche[0][0][0], tipo="trenR",capacidad=float("inf"),costo=0)
+		G.add_edge(aristas_trasnoche[0][0][1],aristas_trasnoche[1][0][1], tipo="trenR", capacidad=float("inf"), costo=0)
+	else:
+		# Si la estación en reparación es la primera, limita la capacidad y añade aristas en sentido contrario
+		G.edges[aristas_trasnoche[0][0][0],aristas_trasnoche[0][0][1]]["capacidad"] = capacidad_limitada
+		G.add_edge(aristas_trasnoche[0][0][0],aristas_trasnoche[1][0][0], tipo="trenR",capacidad=float("inf"),costo=0)
+		G.add_edge(aristas_trasnoche[1][0][1],aristas_trasnoche[0][0][1], tipo="trenR", capacidad=float("inf"), costo=0)
+	return G
+
+def interpretacion_vagones(G,flowDict):
+	# Para la interpretacion, cambio los flujos para que representen los vagones.
+	for u, v in G.edges:
+		if G.edges[u, v]["tipo"] == "tren":
+			flowDict[u][v] += G.nodes[u]["demanda"]
+		G.edges[u,v]["capacidad"] = G.edges[u,v]["capacidad"] + G.nodes[u]["demanda"]
+	# Sumar la demanda del nodo receptor al flujo existente.
+	return G
 
 
-def plotear(G: nx.Graph, flowDict: dict, title, filename):
+def plot(G: nx.Graph, flowDict: dict, title, filename):
 	"""
 	Genera y muestra un gráfico del grafo G con los flujos calculados en flowDict.
 
@@ -174,18 +212,3 @@ def plotear(G: nx.Graph, flowDict: dict, title, filename):
 		plt.text(0.5, -0.1, f'Archivo: {filename}', fontsize=10, color='gray', style='italic', ha='center', transform=plt.gca().transAxes)
 
 	plt.show()
-
-def cambios_por_reparaciones (estacion_reparacion, capacidad_limitada, G):
-	aristas_trasnoche = []
-	for u,v, in G.edges():
-		if G.edges[u,v]["tipo"] == "trasnoche":
-			aristas_trasnoche.append(((u,v), G.nodes[u]["station"])) #agrego la arista y de donde sale 
-	if estacion_reparacion == G.nodes[aristas_trasnoche[1][0][0]]["station"]: #si la estacion rota es la segunda, agrego aristas de tipo trenR como corresponda
-		G.edges[aristas_trasnoche[1][0][0],aristas_trasnoche[1][0][1]]["capacidad"] = capacidad_limitada
-		G.add_edge(aristas_trasnoche[1][0][0],aristas_trasnoche[0][0][0], tipo="trenR",capacidad=float("inf"),costo=0)
-		G.add_edge(aristas_trasnoche[0][0][1],aristas_trasnoche[1][0][1], tipo="trenR", capacidad=float("inf"), costo=0)
-	else: #si la estacion rota es la primera, entonces poner aristas con el otro sentido que las de arriba
-		G.edges[aristas_trasnoche[0][0][0],aristas_trasnoche[0][0][1]]["capacidad"] = capacidad_limitada
-		G.add_edge(aristas_trasnoche[0][0][0],aristas_trasnoche[1][0][0], tipo="trenR",capacidad=float("inf"),costo=0)
-		G.add_edge(aristas_trasnoche[1][0][1],aristas_trasnoche[0][0][1], tipo="trenR", capacidad=float("inf"), costo=0)
-	return G
