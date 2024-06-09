@@ -191,7 +191,7 @@ def plot(G: nx.Graph, flowDict: dict, title, filename):
 	for tipo, color in colores_aristas.items():
 		plt.scatter([], [], c=color, label=tipo)
 
-	plt.legend(loc="lower center")
+	plt.legend(loc="lower center", bbox_to_anchor=(0.5, -0.05), ncol=6)
 
 	# Etiquetas de las aristas
 	edge_labels = {}
