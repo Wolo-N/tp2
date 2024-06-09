@@ -18,10 +18,8 @@ def main():
         # Construye el grafo
         G = construir_grafo(data)
 
-
         if hay_arreglos_en_progreso:
             cambios_por_reparaciones(estacion_en_reparacion, capacidad_limitada, G)
-
 
         # Calcula el flujo máximo y el corte mínimo
         flowDict = flujo_maximo_corte_minimo(G)
