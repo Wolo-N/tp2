@@ -186,7 +186,7 @@ def plot(G: nx.Graph, flowDict: dict, title, filename):
 				else:
 					pos[nodo] = (5, i * -separacion_vertical)
 
-	nx.draw(G, pos, node_color=nodos_colores, edge_color=aristas_colores, with_labels=False, node_size=500)
+	nx.draw(G, pos, node_color=nodos_colores, edge_color=aristas_colores, with_labels=False, node_size=1000)
 
 	for tipo, color in colores_aristas.items():
 		plt.scatter([], [], c=color, label=tipo)

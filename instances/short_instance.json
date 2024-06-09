@@ -5,25 +5,25 @@
         { "time": 800, "station": "Retiro", "type": "D" },
         { "time": 900, "station": "Tigre", "type": "A" }
     ],
-    "demand": [300]
+    "demand": [299]
     },
     "2": {
     "stops": [
         { "time": 1000, "station": "Tigre", "type": "D" },
         { "time": 1100, "station": "Retiro", "type": "A" }
     ],
-    "demand": [400]
+    "demand": [199]
     },
     "3": {
     "stops": [
         { "time": 1200, "station": "Retiro", "type": "D" },
         { "time": 1300, "station": "Tigre", "type": "A" }
     ],
-    "demand": [200]
+    "demand": [499]
     }
 },
 "stations": ["Retiro", "Tigre"],
 "cost_per_unit": { "Retiro": 1.0, "Tigre": 1.0 },
-"rs_info": { "capacity": 100, "max_rs": 25 },
+"rs_info": { "capacity": 100, "max_rs": 10 },
 "capacidad_nocturna": { "Retiro": 20 }
 }
