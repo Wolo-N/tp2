@@ -9,7 +9,7 @@ def main():
     # especifricar que estacione esta en reparacion y su limte de capacidad.
     hay_arreglos_en_progreso = False
     estacion_en_reparacion = 'Tigre'
-    capacidad_limitada = 2
+    capacidad_limitada = 10
 
 
     for filename in archivos:
@@ -24,8 +24,8 @@ def main():
 
         # Calcula el flujo máximo y el corte mínimo
         flowDict = flujo_maximo_corte_minimo(G)
-        print (flowDict)
-
+        #print (flowDict)
+        
         # Plotteo exacto lo que tira min_cost_flow.
         # El 0 o el 1 pasado como parámetro solamente cambia los títulos.
         plot(G, flowDict, 0, filename)

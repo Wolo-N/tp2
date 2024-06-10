@@ -44,6 +44,9 @@ def construir_grafo(data):
 		elif nodo1_type == "A" and nodo2_type == "D":
 			G.add_edge(f"{nodo2_time}_{nodo2_station}_{nodo2_type}", f"{nodo1_time}_{nodo1_station}_{nodo1_type}", tipo="tren", capacidad=max_capacidad - demanda, costo=0)
 
+		# Agregamos las aristas de traspaso a la mañana
+		#G.add_edge
+
 	estaciones_nodos = {}
 	# Agrupamos los nodos por estación
 	for nodo in G.nodes:
@@ -58,10 +61,15 @@ def construir_grafo(data):
 
 		# Creamos las aristas de traspaso
 		for i in range(len(nodos_ordenados) - 1):
+			
 			G.add_edge(nodos_ordenados[i], nodos_ordenados[i + 1], tipo="traspaso", capacidad=float("inf"), costo=0)
 
 		# Creamos las aristas de traspaso
 		G.add_edge(nodos_ordenados[-1], nodos_ordenados[0], tipo="trasnoche", capacidad=float("inf"), costo=1)
+	
+	G.add_edge(estaciones_nodos["Retiro"][0],estaciones_nodos["Tigre"][0],tipo="trasnoche", capacidad=float("inf"),costo="1")
+	G.add_edge(estaciones_nodos["Tigre"][0],estaciones_nodos["Retiro"][0],tipo="trasnoche",capacidad=float("inf"), costo="1")
+
 
 	return G
 
