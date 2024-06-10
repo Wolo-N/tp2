@@ -29,7 +29,6 @@ def construir_grafo(data):
 
         #Fijamos la demanda
         demanda = math.ceil(viaje_data["demand"][0]/data["rs_info"]["capacity"])
-
         # Agregamos nodos con demanda positiva o negativa según el tipo de estación
         if nodo1_type == "A":
             G.add_node(f"{nodo1_time}_{nodo1_station}_{nodo1_type}", time=nodo1_time, station=nodo1_station, type=nodo1_type, demanda=-demanda)
@@ -43,7 +42,6 @@ def construir_grafo(data):
             G.add_edge(f"{nodo1_time}_{nodo1_station}_{nodo1_type}", f"{nodo2_time}_{nodo2_station}_{nodo2_type}", tipo="tren", capacidad=max_capacidad - demanda, costo=0)
         elif nodo1_type == "A" and nodo2_type == "D":
             G.add_edge(f"{nodo2_time}_{nodo2_station}_{nodo2_type}", f"{nodo1_time}_{nodo1_station}_{nodo1_type}", tipo="tren", capacidad=max_capacidad - demanda, costo=0)
-
     estaciones_nodos = {}
     # Agrupamos los nodos por estación
     for nodo in G.nodes:
@@ -58,7 +56,6 @@ def construir_grafo(data):
         nodo_inicio = f"inicio_{estacion}"
         G.add_node(nodo_inicio, time=0, station=estacion, type="inicio", demanda=0)
         inicio_nodos[estacion] = nodo_inicio
-
     # Ordenamos los nodos por tiempo y creamos las aristas de traspaso
     for estacion, nodos in estaciones_nodos.items():
         nodos_ordenados = sorted(nodos, key=lambda nodo: G.nodes[nodo]["time"])
@@ -66,17 +63,18 @@ def construir_grafo(data):
         # Creamos las aristas de traspaso
         for i in range(len(nodos_ordenados) - 1):
             G.add_edge(nodos_ordenados[i], nodos_ordenados[i + 1], tipo="traspaso", capacidad=float("inf"), costo=0)
-
         # Redirigimos el flujo de trasnoche vertical hacia los nodos de inicio
         G.add_edge(nodos_ordenados[-1], inicio_nodos[estacion], tipo="trasnoche", capacidad=float("inf"), costo=1)
 
-    estaciones = list(estaciones_nodos.keys())\
+    estaciones = list(estaciones_nodos.keys())
+    ordenado_estacion1 = sorted(estaciones_nodos[estaciones[0]], key=lambda nodo: G.nodes[nodo]["time"])
+    ordenado_estacion2 = sorted(estaciones_nodos[estaciones[1]], key=lambda nodo: G.nodes[nodo]["time"])
     # Crear aristas de trasnoche horizontales desde los nodos de inicio a los primeros trenes de las estaciones opuestas.
-    G.add_edge(inicio_nodos[estaciones[1]], estaciones_nodos[estaciones[0]][0], tipo="trasnoche", capacidad=float("inf"), costo=1)
-    G.add_edge(inicio_nodos[estaciones[0]], estaciones_nodos[estaciones[1]][0], tipo="trasnoche", capacidad=float("inf"), costo=1)
+    G.add_edge(inicio_nodos[estaciones[1]], ordenado_estacion1[0], tipo="trasnoche", capacidad=float("inf"), costo=1)
+    G.add_edge(inicio_nodos[estaciones[0]], ordenado_estacion2[0], tipo="trasnoche", capacidad=float("inf"), costo=1)
     # Crear aristas de traslado verticales desde los nodos de inicio a los primeros trenes de las mismas estaciones.
-    G.add_edge(inicio_nodos[estaciones[1]], estaciones_nodos[estaciones[1]][0], tipo="traspaso", capacidad=float("inf"), costo=0)
-    G.add_edge(inicio_nodos[estaciones[0]], estaciones_nodos[estaciones[0]][0], tipo="traspaso", capacidad=float("inf"), costo=0)
+    G.add_edge(inicio_nodos[estaciones[1]], ordenado_estacion2[0], tipo="traspaso", capacidad=float("inf"), costo=0)
+    G.add_edge(inicio_nodos[estaciones[0]], ordenado_estacion1[0], tipo="traspaso", capacidad=float("inf"), costo=0)
 
     return G
 
@@ -92,6 +90,7 @@ def flujo_maximo_corte_minimo(G):
     Returns:
     - flowDict (dict): Diccionario con claves: (origen y destino), y valores = flujo en cada arista.
     """
+    #flowDict = {}
     flowDict = nx.min_cost_flow(G, "demanda", "capacidad", "costo")
 
     return flowDict

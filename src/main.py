@@ -2,14 +2,12 @@ import json
 from core_functions import *
 
 def main():
-    archivos = ["instances/short_instance_luli.json"]#, "instances/short_instance_2.json", "instances/short_instance.json","instances/new_instance.json", "instances/toy_instance.json",
-                #"instances/retiro-tigre-semana.json", "instances/test_instance_ward.json"]
-
-    # Si hay arreglos en progreso setear variable a TRUE,
+    archivos = ["instances/toy_instance.json","instances/retiro-tigre-semana.json", "instances/new_instance.json", "instances/short_instance_2.json", "instances/short_instance.json"]
+    # Si hay arreglos en progreso setear variable a True,
     # especifricar que estacione esta en reparacion y su limte de capacidad.
     hay_arreglos_en_progreso = False
     estacion_en_reparacion = 'Tigre'
-    capacidad_limitada = 2
+    capacidad_limitada = 1000
 
 
     for filename in archivos:
