@@ -27,11 +27,11 @@ def main():
 
         # Plotteo exacto lo que tira min_cost_flow.
         # El 0 o el 1 pasado como parámetro solamente cambia los títulos.
-        plot(G, flowDict, 0, filename)
+        plot(G, flowDict, 0, filename, 0)
 
         # Preparamos y plotteamos la representación medida en vagones.
         interpretacion_vagones(G,flowDict)
-        plot(G, flowDict, 1, filename)
+        plot(G, flowDict, 1, filename, True)
 
 if __name__ == "__main__":
     main()

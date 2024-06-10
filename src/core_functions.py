@@ -1,6 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import math
 
 def construir_grafo(data):
@@ -138,10 +137,11 @@ def interpretacion_vagones(G,flowDict):
             flowDict[u][v] += G.nodes[u]["demanda"]
         G.edges[u,v]["capacidad"] = G.edges[u,v]["capacidad"] + G.nodes[u]["demanda"]
     # Sumar la demanda del nodo receptor al flujo existente.
+
     return G
 
 
-def plot(G: nx.Graph, flowDict: dict, title, filename):
+def plot(G: nx.Graph, flowDict: dict, title, filename, filter_0_flow:bool):
     """
     Genera y muestra un gráfico del grafo G con los flujos calculados en flowDict.
 
@@ -172,8 +172,15 @@ def plot(G: nx.Graph, flowDict: dict, title, filename):
         "trenR": "orange",
     }
 
-    aristas_colores = [colores_aristas[G.edges[arista]["tipo"]] for arista in G.edges]
+    if filter_0_flow:
+        edges_with_flow = [(u, v) for u, v in G.edges if flowDict[u][v] > 0]
+        aristas_colores = [colores_aristas[G.edges[arista]["tipo"]] for arista in edges_with_flow]
+    else:
+        edges_with_flow = list(G.edges)
+        aristas_colores = [colores_aristas[G.edges[arista]["tipo"]] for arista in edges_with_flow]
+
     nodos_colores = [colores_estaciones[G.nodes[nodo]["station"]] for nodo in G.nodes]
+
 
     for estacion, color in colores_estaciones.items():
         plt.scatter([], [], c=color, label=estacion)
@@ -202,7 +209,7 @@ def plot(G: nx.Graph, flowDict: dict, title, filename):
                 else:
                     pos[nodo] = (5, i * -separacion_vertical)
 
-    nx.draw(G, pos, node_color=nodos_colores, edge_color=aristas_colores, with_labels=False, node_size=1000)
+    nx.draw(G, pos, edgelist=edges_with_flow, node_color=nodos_colores, edge_color=aristas_colores, with_labels=False, node_size=500)
 
     for tipo, color in colores_aristas.items():
         plt.scatter([], [], c=color, label=tipo)
@@ -226,5 +233,8 @@ def plot(G: nx.Graph, flowDict: dict, title, filename):
     else:
         plt.title("Interpretación de los vagones")
         plt.text(0.5, -0.1, f'Archivo: {filename}', fontsize=10, color='gray', style='italic', ha='center', transform=plt.gca().transAxes)
+
+    plt.gcf().set_facecolor('#f0f0f0')
+    plt.gca().set_facecolor('#f0f0f0')
 
     plt.show()
