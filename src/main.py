@@ -2,7 +2,7 @@ import json
 from core_functions import *
 
 def main():
-    archivos = ["instances/short_instance.json","instances/new_instance.json", "instances/toy_instance.json",
+    archivos = ["instances/short_instance_2.json", "instances/short_instance.json","instances/new_instance.json", "instances/toy_instance.json",
                 "instances/retiro-tigre-semana.json", "instances/test_instance_ward.json"]
 
     # Si hay arreglos en progreso setear variable a TRUE,

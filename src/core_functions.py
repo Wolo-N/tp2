@@ -1,5 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import math
 
 def construir_grafo(data):
@@ -52,7 +53,14 @@ def construir_grafo(data):
             estaciones_nodos[estacion] = []
         estaciones_nodos[estacion].append(nodo)
 
-    # Ordenamos los nodos por tiempo.
+    # Crear nodos de inicio para cada estación
+    inicio_nodos = {}
+    for estacion in estaciones_nodos.keys():
+        nodo_inicio = f"inicio_{estacion}"
+        G.add_node(nodo_inicio, time=0, station=estacion, type="inicio", demanda=0)
+        inicio_nodos[estacion] = nodo_inicio
+
+    # Ordenamos los nodos por tiempo y creamos las aristas de traspaso
     for estacion, nodos in estaciones_nodos.items():
         nodos_ordenados = sorted(nodos, key=lambda nodo: G.nodes[nodo]["time"])
 
@@ -60,12 +68,17 @@ def construir_grafo(data):
         for i in range(len(nodos_ordenados) - 1):
             G.add_edge(nodos_ordenados[i], nodos_ordenados[i + 1], tipo="traspaso", capacidad=float("inf"), costo=0)
 
-        # Creamos las aristas de traspaso
-        G.add_edge(nodos_ordenados[-1], nodos_ordenados[0], tipo="trasnoche", capacidad=float("inf"), costo=1)
+        # Redirigimos el flujo de trasnoche vertical hacia los nodos de inicio
+        G.add_edge(nodos_ordenados[-1], inicio_nodos[estacion], tipo="trasnoche", capacidad=float("inf"), costo=1)
 
-    G.add_edge(estaciones_nodos["Retiro"][0],estaciones_nodos["Tigre"][0],tipo="trasnoche", capacidad=float("inf"),costo=1)
-    G.add_edge(estaciones_nodos["Tigre"][0],estaciones_nodos["Retiro"][0],tipo="trasnoche",capacidad=float("inf"), costo=1)
-
+    estaciones = list(estaciones_nodos.keys())\
+    # Crear aristas de trasnoche horizontales desde los nodos de inicio a los primeros trenes de las estaciones opuestas.
+    G.add_edge(inicio_nodos[estaciones[1]], estaciones_nodos[estaciones[0]][0], tipo="trasnoche", capacidad=float("inf"), costo=1)
+    G.add_edge(inicio_nodos[estaciones[0]], estaciones_nodos[estaciones[1]][0], tipo="trasnoche", capacidad=float("inf"), costo=1)
+    # Crear aristas de traslado verticales desde los nodos de inicio a los primeros trenes de las mismas estaciones.
+    G.add_edge(inicio_nodos[estaciones[1]], estaciones_nodos[estaciones[1]][0], tipo="traspaso", capacidad=float("inf"), costo=0)
+    G.add_edge(inicio_nodos[estaciones[0]], estaciones_nodos[estaciones[0]][0], tipo="traspaso", capacidad=float("inf"), costo=0)
+    
     return G
 
 

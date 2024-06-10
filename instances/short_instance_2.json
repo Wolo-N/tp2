@@ -1,0 +1,21 @@
+{
+    "services": {
+      "1": {
+        "stops": [
+          { "time": 289, "station": "Retiro", "type": "D" },
+          { "time": 343, "station": "Tigre", "type": "A" }
+        ],
+        "demand": [1000]
+      },
+      "2": {
+        "stops": [
+          { "time": 304, "station": "Retiro", "type": "D" },
+          { "time": 358, "station": "Tigre", "type": "A" }
+        ],
+        "demand": [1000]
+      }
+    },
+    "stations": ["Tigre", "Retiro"],
+    "cost_per_unit": { "Tigre": 1.0, "Retiro": 1.0 },
+    "rs_info": { "capacity": 100, "max_rs": 25 }
+  }
