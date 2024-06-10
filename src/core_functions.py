@@ -172,15 +172,8 @@ def plot(G: nx.Graph, flowDict: dict, title, filename, filter_0_flow:bool):
         "trenR": "orange",
     }
 
-    if filter_0_flow:
-        edges_with_flow = [(u, v) for u, v in G.edges if flowDict[u][v] > 0]
-        aristas_colores = [colores_aristas[G.edges[arista]["tipo"]] for arista in edges_with_flow]
-    else:
-        edges_with_flow = list(G.edges)
-        aristas_colores = [colores_aristas[G.edges[arista]["tipo"]] for arista in edges_with_flow]
-
+    aristas_colores = [colores_aristas[G.edges[arista]["tipo"]] for arista in G.edges]
     nodos_colores = [colores_estaciones[G.nodes[nodo]["station"]] for nodo in G.nodes]
-
 
     for estacion, color in colores_estaciones.items():
         plt.scatter([], [], c=color, label=estacion)
@@ -209,7 +202,7 @@ def plot(G: nx.Graph, flowDict: dict, title, filename, filter_0_flow:bool):
                 else:
                     pos[nodo] = (5, i * -separacion_vertical)
 
-    nx.draw(G, pos, edgelist=edges_with_flow, node_color=nodos_colores, edge_color=aristas_colores, with_labels=False, node_size=500)
+    nx.draw(G, pos, node_color=nodos_colores, edge_color=aristas_colores, with_labels=False, node_size=1000)
 
     for tipo, color in colores_aristas.items():
         plt.scatter([], [], c=color, label=tipo)
