@@ -78,7 +78,7 @@ def construir_grafo(data):
     # Crear aristas de traslado verticales desde los nodos de inicio a los primeros trenes de las mismas estaciones.
     G.add_edge(inicio_nodos[estaciones[1]], estaciones_nodos[estaciones[1]][0], tipo="traspaso", capacidad=float("inf"), costo=0)
     G.add_edge(inicio_nodos[estaciones[0]], estaciones_nodos[estaciones[0]][0], tipo="traspaso", capacidad=float("inf"), costo=0)
-    
+
     return G
 
 

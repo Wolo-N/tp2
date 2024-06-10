@@ -1,21 +1,67 @@
 {
     "services": {
-      "1": {
-        "stops": [
-          { "time": 289, "station": "Retiro", "type": "D" },
-          { "time": 343, "station": "Tigre", "type": "A" }
-        ],
-        "demand": [1000]
-      },
-      "2": {
-        "stops": [
-          { "time": 304, "station": "Retiro", "type": "D" },
-          { "time": 358, "station": "Tigre", "type": "A" }
-        ],
-        "demand": [1000]
-      }
+        "1": {
+            "stops": [
+                {
+                    "time": 800,
+                    "station": "Retiro",
+                    "type": "D"
+                },
+                {
+                    "time": 900,
+                    "station": "Tigre",
+                    "type": "A"
+                }
+            ],
+            "demand": [
+                300
+            ]
+        },
+        "2": {
+            "stops": [
+                {
+                    "time": 1000,
+                    "station": "Tigre",
+                    "type": "D"
+                },
+                {
+                    "time": 1100,
+                    "station": "Retiro",
+                    "type": "A"
+                }
+            ],
+            "demand": [
+                400
+            ]
+        },
+        "3": {
+            "stops": [
+                {
+                    "time": 1200,
+                    "station": "Retiro",
+                    "type": "D"
+                },
+                {
+                    "time": 1300,
+                    "station": "Tigre",
+                    "type": "A"
+                }
+            ],
+            "demand": [
+                200
+            ]
+        }
     },
-    "stations": ["Tigre", "Retiro"],
-    "cost_per_unit": { "Tigre": 1.0, "Retiro": 1.0 },
-    "rs_info": { "capacity": 100, "max_rs": 25 }
-  }
+    "stations": [
+        "Tigre",
+        "Retiro"
+    ],
+    "cost_per_unit": {
+        "Retiro": 1.0,
+        "Tigre": 1.0
+    },
+    "rs_info": {
+        "capacity": 100,
+        "max_rs": 10
+    }
+}
