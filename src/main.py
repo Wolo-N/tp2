@@ -2,8 +2,8 @@ import json
 from core_functions import *
 
 def main():
-    archivos = ["instances/short_instance.json","instances/new_instance.json", "instances/toy_instance.json",
-                "instances/retiro-tigre-semana.json", "instances/test_instance_ward.json"]
+    archivos = ["instances/short_instance.json"]#,"instances/new_instance.json", "instances/toy_instance.json",
+                #"instances/retiro-tigre-semana.json", "instances/test_instance_ward.json"]
 
     # Si hay arreglos en progreso setear variable a TRUE,
     # especifricar que estacione esta en reparacion y su limte de capacidad.
@@ -24,6 +24,7 @@ def main():
 
         # Calcula el flujo máximo y el corte mínimo
         flowDict = flujo_maximo_corte_minimo(G)
+        print (flowDict)
 
         # Plotteo exacto lo que tira min_cost_flow.
         # El 0 o el 1 pasado como parámetro solamente cambia los títulos.
