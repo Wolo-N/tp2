@@ -1,0 +1,21 @@
+{
+    "services": {
+        "1": {
+            "stops": [
+                {"time": 1, "station": "A", "type": "D"},
+                {"time": 2, "station": "B", "type": "A"}
+            ],
+            "demand": [500]
+        },
+        "2": {
+            "stops": [
+                {"time": 1, "station": "A", "type": "D"},
+                {"time": 2, "station": "B", "type": "A"}
+            ],
+            "demand": [500]
+        }
+    },
+    "stations": ["A", "B"],
+    "cost_per_unit": {"A": 1.0, "B": 1.0}, 
+    "rs_info": {"capacity": 100, "max_rs": 25}
+}
