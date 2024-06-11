@@ -2,7 +2,7 @@ import time
 import json
 import networkx as nx
 import matplotlib.pyplot as plt
-from core_functions import construir_grafo, flujo_maximo_corte_minimo, cambios_por_reparaciones, interpretacion_vagones, plot
+from core_functions import construir_grafo, flujo_maximo_corte_minimo
 
 def medir_tiempo_construccion_calculo(data):
     """
@@ -21,10 +21,16 @@ def medir_tiempo_construccion_calculo(data):
     tiempo_construccion = time.time() - start_time_construccion
 
     start_time_calculo = time.time()
-    flujo_maximo_corte_minimo(G)
-    tiempo_calculo = time.time() - start_time_calculo
+    try:
+        flujo_maximo_corte_minimo(G)
+        tiempo_calculo = time.time() - start_time_calculo
+        factible = True
+    except nx.NetworkXUnfeasible as e:
+        print(f"Error de factibilidad: {e}")
+        tiempo_calculo = None
+        factible = False
 
-    return tiempo_construccion, tiempo_calculo, G
+    return tiempo_construccion, tiempo_calculo, G, factible
 
 def aumentar_demanda(data, factor):
     """
@@ -57,8 +63,12 @@ def experimentacion_demanda(data, factores_demanda):
 
     for factor in factores_demanda:
         data_aumentada = aumentar_demanda(data, factor)
-        tiempo_construccion, tiempo_calculo, _ = medir_tiempo_construccion_calculo(data_aumentada)
-        resultados[factor] = {"tiempo_construccion": tiempo_construccion, "tiempo_calculo": tiempo_calculo}
+        tiempo_construccion, tiempo_calculo, _, factible = medir_tiempo_construccion_calculo(data_aumentada)
+        resultados[factor] = {
+            "tiempo_construccion": tiempo_construccion,
+            "tiempo_calculo": tiempo_calculo,
+            "factible": factible
+        }
 
     return resultados
 
@@ -71,7 +81,7 @@ def graficar_resultados(resultados, factores_demanda):
         factores_demanda (list): Lista de factores de aumento de la demanda.
     """
     tiempos_construccion = [resultados[factor]["tiempo_construccion"] for factor in factores_demanda]
-    tiempos_calculo = [resultados[factor]["tiempo_calculo"] for factor in factores_demanda]
+    tiempos_calculo = [resultados[factor]["tiempo_calculo"] if resultados[factor]["factible"] else None for factor in factores_demanda]
 
     plt.figure(figsize=(12, 6))
 
@@ -92,7 +102,7 @@ def graficar_resultados(resultados, factores_demanda):
 
 if __name__ == "__main__":
     # Cargar datos desde el archivo JSON
-    with open("instances/toy_instance.json", "r") as file:
+    with open("instances/retiro-tigre-semana-copy.json", "r") as file:
         data = json.load(file)
 
     # Factores de aumento de la demanda
@@ -105,7 +115,10 @@ if __name__ == "__main__":
     for factor, resultado in resultados.items():
         print(f"--- Factor de Demanda: {factor} ---")
         print(f"Tiempo de construcción del grafo: {resultado['tiempo_construccion']} segundos")
-        print(f"Tiempo de cálculo del flujo: {resultado['tiempo_calculo']} segundos")
+        if resultado['factible']:
+            print(f"Tiempo de cálculo del flujo: {resultado['tiempo_calculo']} segundos")
+        else:
+            print("No factible para este factor de demanda.")
         print()
 
     # Graficar resultados

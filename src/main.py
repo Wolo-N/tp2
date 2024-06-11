@@ -2,7 +2,7 @@ import json
 from core_functions import *
 
 def main():
-    archivos = ["instances/toy_instance.json","instances/retiro-tigre-semana.json", "instances/new_instance.json", "instances/short_instance_2.json", "instances/short_instance.json"]
+    archivos = ["instances/toy_instance.json","instances/retiro-tigre-semana.json", "instances/new_instance.json"] #, "instances/short_instance.json", "instances/short_instance.json"
     # Si hay arreglos en progreso setear variable a True,
     # especifricar que estacione esta en reparacion y su limte de capacidad.
     hay_arreglos_en_progreso = False
