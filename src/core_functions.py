@@ -14,7 +14,6 @@ def construir_grafo(data):
         Cada nodo representa una parada de tren con atributos como tiempo, estación, tipo y demanda.
         Las aristas representan las conexiones entre las paradas con atributos como tipo, capacidad y costo.
     """
-
     G = nx.DiGraph()
 
     # Extraemos la informacion de los datasets
@@ -70,14 +69,13 @@ def construir_grafo(data):
     ordenado_estacion1 = sorted(estaciones_nodos[estaciones[0]], key=lambda nodo: G.nodes[nodo]["time"])
     ordenado_estacion2 = sorted(estaciones_nodos[estaciones[1]], key=lambda nodo: G.nodes[nodo]["time"])
     # Crear aristas de trasnoche horizontales desde los nodos de inicio a los primeros trenes de las estaciones opuestas.
-    G.add_edge(inicio_nodos[estaciones[1]], ordenado_estacion1[0], tipo="trasnoche", capacidad=float("inf"), costo=1)
-    G.add_edge(inicio_nodos[estaciones[0]], ordenado_estacion2[0], tipo="trasnoche", capacidad=float("inf"), costo=1)
+    G.add_edge(inicio_nodos[estaciones[1]], ordenado_estacion1[0], tipo="reacomodacion", capacidad=float("inf"), costo=0.5)
+    G.add_edge(inicio_nodos[estaciones[0]], ordenado_estacion2[0], tipo="reacomodacion", capacidad=float("inf"), costo=0.5)
     # Crear aristas de traslado verticales desde los nodos de inicio a los primeros trenes de las mismas estaciones.
     G.add_edge(inicio_nodos[estaciones[1]], ordenado_estacion2[0], tipo="traspaso", capacidad=float("inf"), costo=0)
     G.add_edge(inicio_nodos[estaciones[0]], ordenado_estacion1[0], tipo="traspaso", capacidad=float("inf"), costo=0)
 
     return G
-
 
 
 def flujo_maximo_corte_minimo(G):
@@ -90,7 +88,6 @@ def flujo_maximo_corte_minimo(G):
     Returns:
     - flowDict (dict): Diccionario con claves: (origen y destino), y valores = flujo en cada arista.
     """
-    #flowDict = {}
     flowDict = nx.min_cost_flow(G, "demanda", "capacidad", "costo")
 
     return flowDict
@@ -99,7 +96,7 @@ def flujo_maximo_corte_minimo(G):
 def cambios_por_reparaciones (estacion_reparacion, capacidad_limitada, G):
     """
     Modifica el grafo G  y su flujo para corregir por reparaciones en una estación específica,
-    limitando la capacidad de traspaso nocturno y añadiendo aristas de trenR para redirigir el flujo de trenes.
+    limitando la capacidad de traspaso nocturno y añadiendo aristas de reparacion para redirigir el flujo de trenes.
 
     Parámetros:
     - estacion_en_reparacion (str): Nombre de la estación donde se están realizando reparaciones.
@@ -109,33 +106,35 @@ def cambios_por_reparaciones (estacion_reparacion, capacidad_limitada, G):
     Retorna:
     - G (networkx.DiGraph): El grafo adaptado a las nuevas restricciones.
     """
-
     aristas_trasnoche = []
     for u,v, in G.edges():
         if G.edges[u,v]["tipo"] == "trasnoche":
             aristas_trasnoche.append(((u,v), G.nodes[u]["station"])) #agrego la arista y de donde sale 
 
     # Verifica si la estación en reparación es la segunda estación de traspaso nocturno
-    if estacion_reparacion == G.nodes[aristas_trasnoche[1][0][0]]["station"]:
+    if estacion_reparacion != G.nodes[aristas_trasnoche[1][0][0]]["station"]:
         # Limitamos la capacidad de la arista de traspaso nocturno
         G.edges[aristas_trasnoche[1][0][0],aristas_trasnoche[1][0][1]]["capacidad"] = capacidad_limitada
         # Aliviamos el flujo redirigiendolo con TrenesR
-        G.add_edge(aristas_trasnoche[1][0][0],aristas_trasnoche[0][0][0], tipo="trenR",capacidad=float("inf"),costo=0)
-        G.add_edge(aristas_trasnoche[0][0][1],aristas_trasnoche[1][0][1], tipo="trenR", capacidad=float("inf"), costo=0)
+        G.add_edge(aristas_trasnoche[1][0][0],aristas_trasnoche[0][0][0], tipo="reparacion",capacidad=float("inf"),costo=0)
     else:
         # Si la estación en reparación es la primera, limita la capacidad y añade aristas en sentido contrario
         G.edges[aristas_trasnoche[0][0][0],aristas_trasnoche[0][0][1]]["capacidad"] = capacidad_limitada
-        G.add_edge(aristas_trasnoche[0][0][0],aristas_trasnoche[1][0][0], tipo="trenR",capacidad=float("inf"),costo=0)
-        G.add_edge(aristas_trasnoche[1][0][1],aristas_trasnoche[0][0][1], tipo="trenR", capacidad=float("inf"), costo=0)
+        G.add_edge(aristas_trasnoche[0][0][0],aristas_trasnoche[1][0][0], tipo="reparacion",capacidad=float("inf"),costo=0)
     return G
 
-def interpretacion_vagones(G,flowDict):
+def interpretacion_vagones(G,flowDict, hay_arreglos_en_progreso):
     # Para la interpretacion, cambio los flujos para que representen los vagones.
     for u, v in G.edges:
-        if G.edges[u, v]["tipo"] == "tren":
-            flowDict[u][v] += G.nodes[u]["demanda"]
-        G.edges[u,v]["capacidad"] = G.edges[u,v]["capacidad"] + G.nodes[u]["demanda"]
-    # Sumar la demanda del nodo receptor al flujo existente.
+        if G.edges[u, v]["tipo"] == "tren" or  G.edges[u, v]["tipo"] == "reparacion":
+            flowDict[u][v] += abs(G.nodes[u]["demanda"])
+
+        if hay_arreglos_en_progreso:
+            if G.edges[u, v]["tipo"] != "trasnoche":
+                G.edges[u, v]["capacidad"] = G.edges[u, v]["capacidad"] + G.nodes[u]["demanda"]
+        else:
+            G.edges[u, v]["capacidad"] = G.edges[u, v]["capacidad"] + G.nodes[u]["demanda"]
+        # Sumar la demanda del nodo receptor al flujo existente.
 
     return G
 
@@ -149,7 +148,6 @@ def plot(G: nx.Graph, flowDict: dict, title, filename, filter_0_flow:bool):
     - flowDict (dict): Diccionario con los flujos en cada arista del grafo.
     - title (int): Indicador para cambiar el título del gráfico (0 para el resultado del algoritmo, 1 para la interpretación en vagones).
     - filename (str): Nombre del archivo de instancia utilizado.
-
     """
     estaciones = set(nx.get_node_attributes(G, 'station').values())
 
@@ -168,7 +166,8 @@ def plot(G: nx.Graph, flowDict: dict, title, filename, filter_0_flow:bool):
         "trasnoche": "red",
         "traspaso": "blue",
         "tren": "green",
-        "trenR": "orange",
+        "reparacion": "orange",
+        "reacomodacion": "violet",
     }
 
     aristas_colores = [colores_aristas[G.edges[arista]["tipo"]] for arista in G.edges]
