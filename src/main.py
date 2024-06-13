@@ -27,7 +27,7 @@ def main():
 
         # Plotteo exacto lo que tira min_cost_flow.
         # El 0 o el 1 pasado como parámetro solamente cambia los títulos.
-        plot(G, flowDict, 0, filename, 0)
+        plot(G, flowDict, 0, filename)
 
         # Preparamos y plotteamos la representación medida en vagones.
         interpretacion_vagones(G,flowDict, hay_arreglos_en_progreso)
