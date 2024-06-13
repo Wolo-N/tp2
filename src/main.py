@@ -2,12 +2,14 @@ import json
 from core_functions import *
 
 def main():
-    archivos = ["instances/toy_instance.json","instances/retiro-tigre-semana.json", "instances/new_instance.json"] #, "instances/short_instance.json", "instances/short_instance.json"
-    # Si hay arreglos en progreso setear variable a True,
+    archivos = ["instances/new_instance.json"]#["instances/short_instance_2.json", "instances/short_instance.json","instances/new_instance.json", "instances/toy_instance.json",
+                #"instances/retiro-tigre-semana.json", "instances/test_instance_ward.json"]
+
+    # Si hay arreglos en progreso setear variable a TRUE,
     # especifricar que estacione esta en reparacion y su limte de capacidad.
-    hay_arreglos_en_progreso = False
+    hay_arreglos_en_progreso = True
     estacion_en_reparacion = 'Tigre'
-    capacidad_limitada = 1000
+    capacidad_limitada = 2
 
 
     for filename in archivos:
@@ -28,7 +30,7 @@ def main():
         plot(G, flowDict, 0, filename, 0)
 
         # Preparamos y plotteamos la representación medida en vagones.
-        interpretacion_vagones(G,flowDict)
+        interpretacion_vagones(G,flowDict, hay_arreglos_en_progreso)
         plot(G, flowDict, 1, filename, True)
 
 if __name__ == "__main__":
