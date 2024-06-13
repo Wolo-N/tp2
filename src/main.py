@@ -7,7 +7,7 @@ def main():
 
     # Si hay arreglos en progreso setear variable a TRUE,
     # especifricar que estacione esta en reparacion y su limte de capacidad.
-    hay_arreglos_en_progreso = True
+    hay_arreglos_en_progreso = False
     estacion_en_reparacion = 'Tigre'
     capacidad_limitada = 2
 
@@ -31,7 +31,7 @@ def main():
 
         # Preparamos y plotteamos la representación medida en vagones.
         interpretacion_vagones(G,flowDict, hay_arreglos_en_progreso)
-        plot(G, flowDict, 1, filename, True)
+        plot(G, flowDict, 1, filename)
 
 if __name__ == "__main__":
     main()

@@ -139,7 +139,7 @@ def interpretacion_vagones(G,flowDict, hay_arreglos_en_progreso):
     return G
 
 
-def plot(G: nx.Graph, flowDict: dict, title, filename, filter_0_flow:bool):
+def plot(G: nx.Graph, flowDict: dict, title, filename):
     """
     Genera y muestra un gráfico del grafo G con los flujos calculados en flowDict.
 
