@@ -53,7 +53,7 @@ def construir_grafo(data):
     inicio_nodos = {}
     for estacion in estaciones_nodos.keys():
         nodo_inicio = f"inicio_{estacion}"
-        G.add_node(nodo_inicio, time=0, station=estacion, type="inicio", demanda=0)
+        G.add_node(nodo_inicio, time=-1, station=estacion, type="inicio", demanda=0)
         inicio_nodos[estacion] = nodo_inicio
     # Ordenamos los nodos por tiempo y creamos las aristas de traspaso
     for estacion, nodos in estaciones_nodos.items():
@@ -126,7 +126,7 @@ def cambios_por_reparaciones (estacion_reparacion, capacidad_limitada, G):
 def interpretacion_vagones(G,flowDict, hay_arreglos_en_progreso):
     # Para la interpretacion, cambio los flujos para que representen los vagones.
     for u, v in G.edges:
-        if G.edges[u, v]["tipo"] == "tren" or  G.edges[u, v]["tipo"] == "reparacion":
+        if G.edges[u, v]["tipo"] == "tren" or  (G.edges[u, v]["tipo"] == "reparacion" and G.nodes[v]["time"] - G.nodes[u]["time"] > 0):
             flowDict[u][v] += abs(G.nodes[u]["demanda"])
 
         if hay_arreglos_en_progreso:
